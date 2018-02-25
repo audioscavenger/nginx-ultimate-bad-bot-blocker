@@ -72,8 +72,7 @@ Now run the install-ngxblocker script in DRY-MODE which will show you what chang
 The install-ngxblocker downloads all required files including the setup and update scripts.
 
 ```
-cd /usr/sbin
-sudo ./install-ngxblocker
+sudo install-ngxblocker
 ```
 
 This will show you output as follows of the changes that will be made 
@@ -104,8 +103,8 @@ Downloading [FROM]=>  [REPO]/bots.d/custom-bad-referrers.conf   [TO]=>  /etc/ngi
 
 REPO = https://raw.githubusercontent.com/mitchellkrogza/nginx-ultimate-bad-bot-blocker/master
 
-Downloading [FROM]=>  [REPO]/setup-ngxblocker      [TO]=>  /usr/sbin/setup-ngxblocker
-Downloading [FROM]=>  [REPO]/update-ngxblocker     [TO]=>  /usr/sbin/update-ngxblocker
+Downloading [FROM]=>  [REPO]/setup-ngxblocker      [TO]=>  /usr/local/sbin/setup-ngxblocker
+Downloading [FROM]=>  [REPO]/update-ngxblocker     [TO]=>  /usr/local/sbin/update-ngxblocker
 ```
 
 **setup-ngxblocker, install-ngxblocker and update-ngxblocker can all be configured with custom installation / update locations from the command line.** 
@@ -118,8 +117,7 @@ Downloading [FROM]=>  [REPO]/update-ngxblocker     [TO]=>  /usr/sbin/update-ngxb
 Now run the install script with the -x parameter to download all the necessary files from the repository:
 
 ```
-cd /usr/sbin/
-sudo ./install-ngxblocker -x
+sudo install-ngxblocker -x
 ```
 
 This will give you the following output:
@@ -147,8 +145,8 @@ Downloading [FROM]=>  [REPO]/bots.d/custom-bad-referrers.conf   [TO]=>  /etc/ngi
 
 REPO = https://raw.githubusercontent.com/mitchellkrogza/nginx-ultimate-bad-bot-blocker/master
 
-Downloading [FROM]=>  [REPO]/setup-ngxblocker      [TO]=>  /usr/sbin/setup-ngxblocker...OK
-Downloading [FROM]=>  [REPO]/update-ngxblocker     [TO]=>  /usr/sbin/update-ngxblocker...OK
+Downloading [FROM]=>  [REPO]/setup-ngxblocker      [TO]=>  /usr/local/sbin/setup-ngxblocker...OK
+Downloading [FROM]=>  [REPO]/update-ngxblocker     [TO]=>  /usr/local/sbin/update-ngxblocker...OK
 ```
 
 All the required files have now been downloaded to the correct folders on Nginx for you direct from the repository.
@@ -156,8 +154,8 @@ All the required files have now been downloaded to the correct folders on Nginx 
 **MAKE SURE you set your setup and update scripts to be executable by running the following two commands. This is important before continuing with Step 4 and onwards.**
 
 ```
-sudo chmod +x /usr/sbin/setup-ngxblocker
-sudo chmod +x /usr/sbin/update-ngxblocker
+sudo chmod +x /usr/local/sbin/setup-ngxblocker
+sudo chmod +x /usr/local/sbin/update-ngxblocker
 ```
 
 **setup-ngxblocker, install-ngxblocker and update-ngxblocker can all be configured with custom installation / update locations from the command line.** 
@@ -170,8 +168,7 @@ sudo chmod +x /usr/sbin/update-ngxblocker
 Now run the setup-ngxblocker script in DRY-MODE which will show you what changes it will make and what files it will download for you. This is only a DRY-RUN so no changes are being made yet.
 
 ```
-cd /usr/sbin/
-sudo ./setup-ngxblocker
+sudo setup-ngxblocker
 ```
 
 This will give you output as follows (this output below assumes your nginx.conf file already has the default include of /etc/nginx/conf.d/*)
@@ -208,13 +205,12 @@ This setup-ngxblocker script assumes that all your vhost files located in /etc/n
 
 For instance if your vhost files end in .conf you will change this execute setup-ngxblocker with an additional command line parameter as follows:
 
-`sudo ./setup-ngxblocker -x -e conf`
+`sudo setup-ngxblocker -x -e conf`
 
 So now let's run the setup script and let it make all the changes we need to make the Bot Blocker active on all your sites.
 
 ```
-cd /usr/sbin/
-sudo ./setup-ngxblocker -x
+sudo setup-ngxblocker -x
 ```
 
 You will see output as follows:
@@ -281,17 +277,17 @@ Now setup cron to automatically update the blocker for you every day so you alwa
 
 Add the following line at the end of your crontab file. Note adding the `-e` command line parameter to specify your email address where the update report is sent to. Obviously substitute `yourname@youremail.com` with your real email address or you will not receive the email when the script has updated.
 
-`00 22 * * * sudo /usr/sbin/update-ngxblocker -e yourname@youremail.com` 
+`00 22 * * * sudo /usr/local/sbin/update-ngxblocker -e yourname@youremail.com` 
 
 This will update the blocker every night for you at 10 PM.
 
 If you want it to update more frequently (as sometimes I push out 3-4 updates a day) you can set it as follows to run the cron every 8 hours, although just once a day is more than enough.
 
-`00 */8 * * * sudo /usr/sbin/update-ngxblocker -e yourname@youremail.com`       
+`00 */8 * * * sudo /usr/local/sbin/update-ngxblocker -e yourname@youremail.com`       
 
 If you don't want any email notification after an update (not advisable in case Nginx ever has an EMERG when reloading), then simply run your cron as follows. 
 
-`00 */8 * * * sudo /usr/sbin/update-ngxblocker -n`       
+`00 */8 * * * sudo /usr/local/sbin/update-ngxblocker -n`       
 
 That's it, the blocker will automatically keep itself up to date and also reload Nginx once it has downloaded the latest version of the globalblacklist.conf file.
 
@@ -359,11 +355,11 @@ Some people build Nginx themselves and do not end up having the standard nginx f
 For users like this you can run the install-ngblocker, setup-ngxblocker and update-ngblocker specifying your
 folder location in the command lines as follows.
 
-`sudo ./install-ngxblocker -x -c /usr/local/nginx/conf.d -b /usr/local/nginx/bots.d`
+`sudo install-ngxblocker -x -c /usr/local/nginx/conf.d -b /usr/local/nginx/bots.d`
 
-`sudo ./setup-ngxblocker -x -c /usr/local/nginx/conf.d -b /usr/local/nginx/bots.d`
+`sudo setup-ngxblocker -x -c /usr/local/nginx/conf.d -b /usr/local/nginx/bots.d`
 
-`sudo ./update-ngxblocker -c /usr/local/nginx/conf.d -b /usr/local/nginx/bots.d -e yourname@youremail.com`
+`sudo update-ngxblocker -c /usr/local/nginx/conf.d -b /usr/local/nginx/bots.d -e yourname@youremail.com`
 
 This will automatically put the files into the locations you specify, it will do the includes into your vhosts using your custom locations  and when update-ngblocker pulls a new update it will also now automatically re-write the "Include" sections inside the globalblacklist.conf file your own custom locations. Thanks again to Stuart Cardall @itoffshore for his contributions of these excellent scripts.
 
